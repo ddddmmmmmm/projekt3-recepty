@@ -44,7 +44,7 @@ function najdiRecept() {
 
 
 }
-
+/*hledání v hlavičce*/
 function zobrazSeznamReceptu(recepty) {
     let seznamReceptuElement = document.getElementById("recepty")
     seznamReceptuElement.innerHTML = ""
@@ -53,6 +53,10 @@ function zobrazSeznamReceptu(recepty) {
         let receptElement = zobrazReceptMenu(recept, index)
         seznamReceptuElement.appendChild(receptElement)
     })
+
+
+    /*filtrování podle kategorií*/
+    /*filtrování podle hodnocení*/
 
     /*let receptElement = zobrazReceptMenu({
         nadpis: 'Ovocný tvarohový dort',
