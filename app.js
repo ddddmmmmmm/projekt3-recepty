@@ -21,13 +21,36 @@ recept-hodnoceni, recept-nazev, recept-popis.
 let nalezeneRecepty = recepty;
 /*funkce pro zobrazení všech receptů*/
 
-zobrazSeznamReceptu()
+/*kontrola a zobrazení posledního detailu receptu z local Storage*/
 
-function zobrazSeznamReceptu() {
+let aktualniReceptStorage = localStorage.getItem("aktualniRecept")
+if (aktualniReceptStorage !== null) {
+    zobrazReceptDetail(Number(aktualniReceptStorage))
+}
+
+zobrazSeznamReceptu(nalezeneRecepty)
+
+let vyhledavaniElement = document.getElementById("hledat")
+vyhledavaniElement.addEventListener("keydown", () => {
+    najdiRecept();
+})
+
+function najdiRecept() {
+    let vyhledavaniElement = document.getElementById("hledat")
+
+    let vyhledaneRecepty = recepty.filter(recept => recept.nadpis.toLowerCase().includes(vyhledavaniElement.value))
+
+    zobrazSeznamReceptu(vyhledaneRecepty)
+
+
+}
+
+function zobrazSeznamReceptu(recepty) {
     let seznamReceptuElement = document.getElementById("recepty")
+    seznamReceptuElement.innerHTML = ""
 
-    nalezeneRecepty.forEach((recept) => {
-        let receptElement = zobrazReceptMenu(recept)
+    recepty.forEach((recept, index) => {
+        let receptElement = zobrazReceptMenu(recept, index)
         seznamReceptuElement.appendChild(receptElement)
     })
 
@@ -47,12 +70,30 @@ function zobrazSeznamReceptu() {
 
 }
 /*funkce pro zobrazení detailu receptu*/
-function zobrazReceptDetail(recept) {
-    console.log(recept)
+function zobrazReceptDetail(index) {
+    let aktualniRecept = recepty[index]
+    let receptFoto = document.getElementById("recept-foto")
+    receptFoto.src = aktualniRecept.img
+
+
+    let receptKategorie = document.getElementById("recept-kategorie")
+    receptKategorie.textContent = aktualniRecept.kategorie
+
+
+    let receptHodnoceni = document.getElementById("recept-hodnoceni")
+    receptHodnoceni.textContent = aktualniRecept.hodnoceni
+
+    let receptNazev = document.getElementById("recept-nazev")
+    receptNazev.textContent = aktualniRecept.nadpis
+
+    let receptPopis = document.getElementById("recept-popis")
+    receptPopis.textContent = aktualniRecept.popis
+
+    localStorage.setItem("aktualniRecept", index)
 }
 
 /*funkce pro zobrazení receptu*/
-function zobrazReceptMenu(recept) {
+function zobrazReceptMenu(recept, index) {
 
     let receptElement = document.createElement('div')
     receptElement.className = "recept"
@@ -79,7 +120,10 @@ function zobrazReceptMenu(recept) {
     receptElement.appendChild(receptInfoElement)
 
 
-    receptElement.addEventListener("click", zobrazReceptDetail(recept))
+
+    receptElement.addEventListener('click', () => {
+        zobrazReceptDetail(index);
+    });
 
     return receptElement
 
